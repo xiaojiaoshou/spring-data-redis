@@ -18,32 +18,32 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 public class RedisConfig {
 
-    @Autowired
-    JedisConfig jedisConfig;
-    @Autowired
-    JedisConnectionFactory jedisConnectionFactory;
+//    @Autowired
+//    JedisConfig jedisConfig;
+//    @Autowired
+//    JedisConnectionFactory jedisConnectionFactory;
 
-    @Bean
-    public JedisConnectionFactory jedisConnectionFactory () {
-        RedisStandaloneConfiguration rf = new RedisStandaloneConfiguration();
-        //rf.setDatabase(jedisConfig.database);
-        rf.setHostName(jedisConfig.host);
-        rf.setPort(jedisConfig.port);
-        int to = Integer.parseInt(jedisConfig.timeout.substring(0, jedisConfig.timeout.length() - 2));
-        //JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
-        //jedisClientConfiguration.connectTimeout(Duration.ofMillis(to));
-        JedisClientConfiguration.JedisPoolingClientConfigurationBuilder jpb =
-                (JedisClientConfiguration.JedisPoolingClientConfigurationBuilder) JedisClientConfiguration.builder();
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(jedisConfig.maxIdle);
-        jedisPoolConfig.setMinIdle(jedisConfig.minIdle);
-        jedisPoolConfig.setMaxTotal(jedisConfig.maxActive);
-        int l = Integer.parseInt(jedisConfig.maxWait.substring(0, jedisConfig.maxWait.length() - 2));
-        jedisPoolConfig.setMaxWaitMillis(l);
-        jpb.poolConfig(jedisPoolConfig);
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(rf, jpb.build());
-        return jedisConnectionFactory;
-    }
+//    @Bean
+//    public JedisConnectionFactory jedisConnectionFactory () {
+//        RedisStandaloneConfiguration rf = new RedisStandaloneConfiguration();
+//        //rf.setDatabase(jedisConfig.database);
+//        rf.setHostName(jedisConfig.host);
+//        rf.setPort(jedisConfig.port);
+//        int to = Integer.parseInt(jedisConfig.timeout.substring(0, jedisConfig.timeout.length() - 2));
+//        //JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
+//        //jedisClientConfiguration.connectTimeout(Duration.ofMillis(to));
+//        JedisClientConfiguration.JedisPoolingClientConfigurationBuilder jpb =
+//                (JedisClientConfiguration.JedisPoolingClientConfigurationBuilder) JedisClientConfiguration.builder();
+//        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+//        jedisPoolConfig.setMaxIdle(jedisConfig.maxIdle);
+//        jedisPoolConfig.setMinIdle(jedisConfig.minIdle);
+//        jedisPoolConfig.setMaxTotal(jedisConfig.maxActive);
+//        int l = Integer.parseInt(jedisConfig.maxWait.substring(0, jedisConfig.maxWait.length() - 2));
+//        jedisPoolConfig.setMaxWaitMillis(l);
+//        jpb.poolConfig(jedisPoolConfig);
+//        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(rf, jpb.build());
+//        return jedisConnectionFactory;
+//    }
 
     /**
      * 3.创建RedisTemplate:用于执行Redis操作的方法

@@ -89,8 +89,8 @@ public class RedisManagerTest {
 
     @Test
     public void hset() {
-        String key = "bbb";
-        String item = "ddd";
+        String key = "测试key";
+        String item = "测试feild";
         User user = User.builder().userName("张三").age(23).sex("男").build();
         boolean isSuccess = redisManager.hset(key, item, user,500);
         if (isSuccess) {

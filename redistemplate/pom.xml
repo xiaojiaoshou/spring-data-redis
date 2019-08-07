@@ -26,6 +26,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+            <!-- 默认指定了 lettuce，我们需要排除，并且引入jedis的客户端-->
+            <exclusions>
+                <!-- 默认指定了 lettuce，我们需要排除，并且引入jedis的客户端-->
+                <exclusion>
+                    <groupId>io.lettuce</groupId>
+                    <artifactId>lettuce-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>

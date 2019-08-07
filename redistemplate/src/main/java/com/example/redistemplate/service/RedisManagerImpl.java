@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 @Service
 public class RedisManagerImpl implements RedisManager {
     @Autowired
@@ -27,7 +28,7 @@ public class RedisManagerImpl implements RedisManager {
      * @return
      */
     public boolean expire(String key, long time) {
-        if (time <=0) {
+        if (time <= 0) {
             throw new RuntimeException("time时间非法!");
         }
         return redisTemplate.expire(key, time, TimeUnit.SECONDS);
@@ -242,20 +243,21 @@ public class RedisManagerImpl implements RedisManager {
             if (time <= 0) {
                 throw new RuntimeException("time时间非法!");
             }
-//            redisTemplate.opsForHash().put(key, item, value);
-//            expire(key, time);
-            redisTemplate.setEnableTransactionSupport(true);
+            //  redisTemplate.setEnableTransactionSupport(true);
             List<Object> txResults = new SessionCallback<List<Object>>() {
                 public List<Object> execute(RedisOperations operations) {
+                    redisTemplate.setEnableTransactionSupport(true);
                     operations.multi();
                     operations.opsForHash().put(key, item, value);
-                    operations.expire(key, time,TimeUnit.SECONDS);
+                    //int i=1/0;
+                    // operations.opsForHash().put(null, item, value);
+                    operations.expire(key, time, TimeUnit.SECONDS);
                     return operations.exec();
                 }
             }.execute(redisTemplate);
-           if(CollectionUtils.isEmpty(txResults)){
-               return false;
-           }
+            if (CollectionUtils.isEmpty(txResults)) {
+                return false;
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
