@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -238,26 +239,31 @@ public class RedisManagerImpl implements RedisManager {
      * @param time  时间(秒)  注意:如果已存在的hash表有时间,这里将会替换原有的时间
      * @return true 成功 false失败
      */
+    @Transactional
     public boolean hset(String key, String item, Object value, long time) {
         try {
             if (time <= 0) {
                 throw new RuntimeException("time时间非法!");
             }
-            //  redisTemplate.setEnableTransactionSupport(true);
-            List<Object> txResults = new SessionCallback<List<Object>>() {
-                public List<Object> execute(RedisOperations operations) {
-                    redisTemplate.setEnableTransactionSupport(true);
-                    operations.multi();
-                    operations.opsForHash().put(key, item, value);
-                    //int i=1/0;
-                    // operations.opsForHash().put(null, item, value);
-                    operations.expire(key, time, TimeUnit.SECONDS);
-                    return operations.exec();
-                }
-            }.execute(redisTemplate);
-            if (CollectionUtils.isEmpty(txResults)) {
-                return false;
-            }
+          //  redisTemplate.setEnableTransactionSupport(true);
+            redisTemplate.opsForHash().put(key, item, value);
+            // operations.opsForHash().put(null, item, value);
+            redisTemplate.expire(key, time, TimeUnit.SECONDS);
+//           // redisTemplate.setEnableTransactionSupport(true);
+//            List<Object> txResults = new SessionCallback<List<Object>>() {
+//                public List<Object> execute(RedisOperations operations) {
+//                    // redisTemplate.setEnableTransactionSupport(true);
+//                    operations.multi();
+//                    operations.opsForHash().put(key, item, value);
+//                    int i=1/0;
+//                    // operations.opsForHash().put(null, item, value);
+//                    operations.expire(key, time, TimeUnit.SECONDS);
+//                    return operations.exec();
+//                }
+//            }.execute(redisTemplate);
+//            if (CollectionUtils.isEmpty(txResults)) {
+//                return false;
+//            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
